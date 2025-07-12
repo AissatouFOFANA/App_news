@@ -8,6 +8,7 @@ import { apiService } from '../services/api';
 import { Calendar, User, ArrowLeft } from 'lucide-react';
 import { useApiError } from '@/hooks/useApiError';
 import BackendStatus from '../components/BackendStatus';
+import DiagnosticPanel from '../components/DiagnosticPanel';
 
 const ArticleDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -84,6 +85,13 @@ const ArticleDetailPage: React.FC = () => {
           <div className="mb-4">
             <BackendStatus />
           </div>
+          
+          {/* Panel de diagnostic en mode développement */}
+          {import.meta.env.DEV && (
+            <div className="mb-6">
+              <DiagnosticPanel />
+            </div>
+          )}
           
           <Link to="/">
             <Button>

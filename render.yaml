@@ -1,0 +1,34 @@
+services:
+  # Service Frontend (React/Vite)
+  - type: web
+    name: news-chronicle-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://news-chronicle-backend.onrender.com/api
+      - key: VITE_DEV_MODE
+        value: false
+
+  # Service Backend (Node.js/Express)
+  - type: web
+    name: news-chronicle-backend
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        value: your-database-host
+      - key: DB_USER
+        value: your-database-user
+      - key: DB_PASSWORD
+        value: your-database-password
+      - key: DB_NAME
+        value: news_chronicle
+      - key: JWT_SECRET
+        value: your-jwt-secret-key 

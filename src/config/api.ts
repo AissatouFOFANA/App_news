@@ -1,6 +1,15 @@
+import { ENV_CONFIG, validateConfig } from './environment';
+
+// Validation de la configuration au démarrage
+try {
+  validateConfig();
+} catch (error) {
+  console.error('API Configuration error:', error);
+}
+
 // Configuration de l'API
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  BASE_URL: ENV_CONFIG.API_URL,
   TIMEOUT: 10000, // 10 secondes
   RETRY_ATTEMPTS: 3,
 };

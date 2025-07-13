@@ -94,15 +94,15 @@ const revokeSoapToken = async (req, res) => {
       });
     }
     
-    // Désactiver le token
-    await soapToken.update({ isActive: false });
+    // Supprimer complètement le token
+    await soapToken.destroy();
     
     res.sendFormatted({
       success: true,
-      message: 'Token SOAP révoqué avec succès'
+      message: 'Token SOAP supprimé avec succès'
     });
   } catch (error) {
-    console.error('Erreur lors de la révocation du token SOAP:', error);
+    console.error('Erreur lors de la suppression du token SOAP:', error);
     res.status(500).sendFormatted({
       success: false,
       error: 'Erreur interne du serveur'

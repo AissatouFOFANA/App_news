@@ -1,4 +1,4 @@
-const { Article, Category } = require('../models');
+const { Article, Category, User } = require('../models');
 const { Op } = require('sequelize');
 
 // Obtenir tous les articles avec pagination et filtres
@@ -21,11 +21,18 @@ const getAllArticles = async (req, res) => {
     
     const articles = await Article.findAndCountAll({
       where,
-      include: [{
-        model: Category,
-        as: 'category',
-        attributes: ['id', 'name']
-      }],
+      include: [
+        {
+          model: Category,
+          as: 'category',
+          attributes: ['id', 'name']
+        },
+        {
+          model: User,
+          as: 'author',
+          attributes: ['id', 'username', 'role']
+        }
+      ],
       order: [['createdAt', 'DESC']],
       limit: parseInt(limit),
       offset: parseInt(offset)
@@ -56,11 +63,18 @@ const getArticleById = async (req, res) => {
     const { id } = req.params;
     
     const article = await Article.findByPk(id, {
-      include: [{
-        model: Category,
-        as: 'category',
-        attributes: ['id', 'name']
-      }]
+      include: [
+        {
+          model: Category,
+          as: 'category',
+          attributes: ['id', 'name']
+        },
+        {
+          model: User,
+          as: 'author',
+          attributes: ['id', 'username', 'role']
+        }
+      ]
     });
     
     if (!article) {
@@ -101,11 +115,18 @@ const getArticlesByCategory = async (req, res) => {
     
     const articles = await Article.findAndCountAll({
       where: { categoryId },
-      include: [{
-        model: Category,
-        as: 'category',
-        attributes: ['id', 'name']
-      }],
+      include: [
+        {
+          model: Category,
+          as: 'category',
+          attributes: ['id', 'name']
+        },
+        {
+          model: User,
+          as: 'author',
+          attributes: ['id', 'username', 'role']
+        }
+      ],
       order: [['createdAt', 'DESC']],
       limit: parseInt(limit),
       offset: parseInt(offset)
@@ -137,13 +158,28 @@ const getArticlesByCategory = async (req, res) => {
 // Créer un nouvel article
 const createArticle = async (req, res) => {
   try {
-    const { title, content, categoryId } = req.body;
+    const { title, content, categoryId, mediaType = 'none', imageUrl, videoUrl } = req.body;
     
     // Validation des données
     if (!title || !content || !categoryId) {
       return res.status(400).sendFormatted({
         success: false,
         error: 'Titre, contenu et catégorie requis'
+      });
+    }
+    
+    // Validation des médias
+    if (mediaType === 'image' && !imageUrl) {
+      return res.status(400).sendFormatted({
+        success: false,
+        error: 'URL de l\'image requise pour le type média "image"'
+      });
+    }
+    
+    if (mediaType === 'video' && !videoUrl) {
+      return res.status(400).sendFormatted({
+        success: false,
+        error: 'URL de la vidéo requise pour le type média "video"'
       });
     }
     
@@ -156,20 +192,39 @@ const createArticle = async (req, res) => {
       });
     }
     
+    // Vérifier que l'utilisateur est connecté
+    if (!req.user || !req.user.id) {
+      return res.status(401).sendFormatted({
+        success: false,
+        error: 'Authentification requise pour créer un article'
+      });
+    }
+    
     // Créer l'article
     const article = await Article.create({
       title,
       content,
-      categoryId
+      categoryId,
+      authorId: req.user.id,
+      mediaType,
+      imageUrl: mediaType === 'image' ? imageUrl : null,
+      videoUrl: mediaType === 'video' ? videoUrl : null
     });
     
-    // Récupérer l'article avec sa catégorie
+    // Récupérer l'article avec sa catégorie et son auteur
     const newArticle = await Article.findByPk(article.id, {
-      include: [{
-        model: Category,
-        as: 'category',
-        attributes: ['id', 'name']
-      }]
+      include: [
+        {
+          model: Category,
+          as: 'category',
+          attributes: ['id', 'name']
+        },
+        {
+          model: User,
+          as: 'author',
+          attributes: ['id', 'username', 'role']
+        }
+      ]
     });
     
     res.status(201).sendFormatted({

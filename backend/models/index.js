@@ -14,6 +14,17 @@ Article.belongsTo(Category, {
   as: 'category'
 });
 
+// Relation entre User et Article (auteur)
+User.hasMany(Article, {
+  foreignKey: 'authorId',
+  as: 'articles'
+});
+
+Article.belongsTo(User, {
+  foreignKey: 'authorId',
+  as: 'author'
+});
+
 // Relation entre User et SoapToken
 User.hasMany(SoapToken, {
   foreignKey: 'createdBy',

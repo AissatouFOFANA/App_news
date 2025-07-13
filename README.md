@@ -47,17 +47,28 @@ npm install
 
 3. Configure la base de données MySQL :
 ```sql
-CREATE DATABASE news_chronicle;
+CREATE DATABASE news_db;
 ```
 
 4. Configure le fichier `.env` :
 ```env
+# Configuration de la base de données MySQL
 DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=news_db
 DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=news_chronicle
-JWT_SECRET=your_jwt_secret
+DB_PASSWORD=
+
+# Configuration JWT
+JWT_SECRET=my-super-secret
+JWT_EXPIRES_IN=24h
+
+# Configuration du serveur
 PORT=3000
+NODE_ENV=development
+
+# Configuration CORS
+FRONTEND_URL=http://localhost:8080
 ```
 
 5. Exécute les migrations :

@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ArticleManagement } from '../components/admin/ArticleManagement';
 import { CategoryManagement } from '../components/admin/CategoryManagement';
 import { UserManagement } from '../components/admin/UserManagement';
-import { Settings, FileText, FolderOpen, Users } from 'lucide-react';
+import SoapTokenManagement from '../components/admin/SoapTokenManagement';
+import { Settings, FileText, FolderOpen, Users, Key } from 'lucide-react';
 
 const AdminPage: React.FC = () => {
   const { user, hasRole } = useAuth();
@@ -26,12 +27,12 @@ const AdminPage: React.FC = () => {
           Panel d'Administration
         </h1>
         <p className="text-lg text-muted-foreground">
-          Gérez les articles, catégories{isAdmin && ' et utilisateurs'} de votre site d'actualités.
+          Gérez les articles, catégories{isAdmin && ', utilisateurs et tokens SOAP'} de votre site d'actualités.
         </p>
       </div>
 
       <Tabs defaultValue="articles" className="w-full">
-        <TabsList className={`grid w-full ${isAdmin ? 'grid-cols-3' : 'grid-cols-2'}`}>
+        <TabsList className={`grid w-full ${isAdmin ? 'grid-cols-4' : 'grid-cols-2'}`}>
           <TabsTrigger value="articles" className="flex items-center">
             <FileText className="w-4 h-4 mr-2" />
             Articles
@@ -41,10 +42,16 @@ const AdminPage: React.FC = () => {
             Catégories
           </TabsTrigger>
           {isAdmin && (
-            <TabsTrigger value="users" className="flex items-center">
-              <Users className="w-4 h-4 mr-2" />
-              Utilisateurs
-            </TabsTrigger>
+            <>
+              <TabsTrigger value="users" className="flex items-center">
+                <Users className="w-4 h-4 mr-2" />
+                Utilisateurs
+              </TabsTrigger>
+              <TabsTrigger value="soap-tokens" className="flex items-center">
+                <Key className="w-4 h-4 mr-2" />
+                Tokens SOAP
+              </TabsTrigger>
+            </>
           )}
         </TabsList>
 
@@ -77,19 +84,35 @@ const AdminPage: React.FC = () => {
         </TabsContent>
 
         {isAdmin && (
-          <TabsContent value="users" className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Gestion des Utilisateurs</CardTitle>
-                <CardDescription>
-                  Gérez les comptes utilisateurs et leurs permissions.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <UserManagement />
-              </CardContent>
-            </Card>
-          </TabsContent>
+          <>
+            <TabsContent value="users" className="mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Gestion des Utilisateurs</CardTitle>
+                  <CardDescription>
+                    Gérez les comptes utilisateurs et leurs permissions.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <UserManagement />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="soap-tokens" className="mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Gestion des Tokens SOAP</CardTitle>
+                  <CardDescription>
+                    Générez et gérez les tokens d'authentification pour les services web SOAP.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <SoapTokenManagement />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </>
         )}
       </Tabs>
     </div>

@@ -280,6 +280,31 @@ export class ApiService {
   async healthCheck(): Promise<any> {
     return this.request('/health');
   }
+
+  // Méthodes pour les tokens SOAP (ADMIN uniquement)
+  async getSoapTokens(): Promise<any> {
+    return this.request('/admin/soap-tokens');
+  }
+
+  async generateSoapToken(data: { description: string }): Promise<any> {
+    return this.request('/admin/soap-tokens', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async revokeSoapToken(tokenId: string): Promise<any> {
+    return this.request(`/admin/soap-tokens/${tokenId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async verifySoapToken(token: string): Promise<any> {
+    return this.request('/admin/soap-tokens/verify', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    });
+  }
 }
 
 // Instance exportée pour utilisation dans les hooks

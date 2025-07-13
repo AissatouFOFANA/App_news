@@ -195,21 +195,8 @@ const LoginPage: React.FC = () => {
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Comptes de démonstration
-                </span>
-              </div>
             </div>
             
-            <div className="mt-4 space-y-2 text-sm">
-              <p className="text-muted-foreground">Utilisez ces comptes pour tester :</p>
-              <div className="space-y-1 text-xs">
-                <p><strong>Admin :</strong> admin / admin123</p>
-                <p><strong>Éditeur :</strong> editeur1 / editeur123</p>
-                <p><strong>Visiteur :</strong> visiteur1 / visiteur123</p>
-              </div>
-            </div>
           </div>
 
           <div className="mt-6 text-center">
